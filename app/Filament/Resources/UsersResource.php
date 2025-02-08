@@ -4,9 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UsersResource\Pages;
 use App\Filament\Resources\UsersResource\RelationManagers;
+use App\Models\Department;
 use App\Models\User;
 use App\Models\Users;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,6 +29,11 @@ class UsersResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')->label('Name')->required(),
+                TextInput::make('email')->label('Email')->required(),
+                TextInput::make('password')->label('Password')->required()->type('password'),
+                Select::make('department_id') ->options(Department::all()->pluck('name', 'id'))->label('Group')->required(),
+
+
             ]);
     }
 
@@ -36,6 +43,7 @@ class UsersResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email'),
+                TextColumn::make('department.name')->exists('department')->label('Group'),
             ])
             ->filters([
                 //

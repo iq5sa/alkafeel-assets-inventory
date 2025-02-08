@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('devices', function (Blueprint $table) {
+        Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->foreignId('device_type_id')->constrained('device_types');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->enum('connection_type', ['Ethernet', 'Wi-Fi', 'Other'])->nullable();
             $table->string('vlan_info')->nullable();
             $table->string('port_details')->nullable();
-            $table->string('manufacturer')->nullable();
+            $table->string('assigned_to')->nullable();
             $table->string('model')->nullable();
             $table->string('serial_number')->nullable();
             $table->string('location')->nullable();
@@ -33,10 +33,10 @@ return new class extends Migration
             $table->string('hardware_version')->nullable();
             $table->foreignId('department_id')->constrained('departments');
             $table->date('purchase_date')->nullable();
-            $table->int('maintenance_history_id')->nullable();
+            $table->string('maintenance_history_id')->nullable();
             $table->enum('operational_status', ['active', 'inactive', 'decommissioned'])->default('active');
             $table->text('health_metrics')->nullable();
-            $table->enum('antivirus_status',['enabled_up_to_date','enabled_outdated','disabled','not_installed','error'])->default(false);
+            $table->enum('antivirus_status',['enabled_up_to_date','enabled_outdated','disabled','not_installed','error'])->nullable();
             $table->text('firewall_settings')->nullable();
             $table->text('network_traffic_stats')->nullable();
             $table->boolean('is_enabled')->default(true);

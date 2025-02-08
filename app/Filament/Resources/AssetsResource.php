@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\DevicesResource\Pages;
 use App\Filament\Resources\DevicesResource\RelationManagers;
+use App\Models\Asset;
 use App\Models\Department;
 use App\Models\Device;
 use App\Models\DeviceTypes;
@@ -20,10 +21,12 @@ use Filament\Forms\Components\Select;
 use App\Models\User;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Facades\Date;
 
-class DevicesResource extends Resource
+class AssetsResource extends Resource
 {
-    protected static ?string $model = Device::class;
+    protected static ?string $model = Asset::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -32,24 +35,26 @@ class DevicesResource extends Resource
         return $form
             ->schema([
                 
-                CheckboxList::make('is_enabled')->options(
-                    ['1' => 'Is Enabled',"0" => 'Is Online'
-                ])->label('Is Enabled'),
+                //name
+                TextInput::make('name')->label('Name')->required(),
+                //username
+                TextInput::make('username')->label('UserName')->required(),
 
-
-                // Toggle::make('is_enabled')->default(1)->label('Is Enabled'),
-                // Toggle::make('is_online')->default(1)->label('Is Online'),
-
-
+                //Domain
+                TextInput::make('domain')->label('Domain'),
+                //Device Type
                 Select::make(name: 'device_type_id')
                 ->label('Device Type')
                 ->options(DeviceTypes::all()->pluck('type_name', 'id'))
                 ->searchable()->required(),
-                Select::make(name: 'assigned_user_department')
+
+                //assigned user department
+                Select::make(name: 'department_id')
                 ->label('Departments')
                 ->options(Department::all()->pluck('name', 'id'))
                 ->searchable()->required(),
 
+                //connection type
                 Select::make(name: 'connection_type')
                     ->options([
                         'Ethernet' => 'Ethernet',
@@ -57,14 +62,7 @@ class DevicesResource extends Resource
                         'Other' => 'Other',
                     ])->label('Connection Type'),
 
-                     Select::make(name: 'user_id')
-                    ->options(User::all()->pluck('name', 'id'))
-                    ->label(label: 'Manufacturer (User) '),
-
-                     Select::make(name: 'operational_status')
-                    ->options(['active', 'inactive', 'decommissioned'])
-                    ->label(label: 'Operational Status'),
-
+                    //antivirus status
                     Select::make(name: 'antivirus_status')->options([
                         'enabled_up_to_date' => 'Enabled Up to Date',
                         'enabled_outdated' => 'Enabled Outdated',
@@ -75,35 +73,53 @@ class DevicesResource extends Resource
 
 
 
-                TextInput::make('name')->label('Descriptive name for the device')->required(),
+                //mac address    
                 TextInput::make('mac_address')->label('Mac address')->required(),
+                //ip address
                 TextInput::make('ip_address')->label('IP Address')->required(),
+                //subnet mask
                 TextInput::make('subnet_mask')->label('Subnet mask'),
+                //network info
                 TextInput::make('network_info')->label('Network Info'),
+                //default gateway
                 TextInput::make('default_gateway')->label('Default Gateway'),
+                //dns servers
                 TextInput::make('dns_servers')->label('DNS Servers'),
-                
-
+                //vlan info
                 TextInput::make('vlan_info')->label('VLAN Info'),
+                //port details
                 TextInput::make('port_details')->label('Port Details'),
                
-
+                //model
                 TextInput::make('model')->label('Model'),
+                //serial number
                 TextInput::make('serial_number')->label('Serial Number'),
+                //location
                 TextInput::make('location')->label('Location'),
+                //firmware version
                 TextInput::make('firmware_version')->label('Firmware Version'),
+                //software version
                 TextInput::make('software_version')->label('Software Version'),
+                //hardware version
                 TextInput::make('hardware_version')->label('Hardware Version'),
+
+                //purchase date
                 DatePicker::make('purchase_date') ->native(false)->label('Purchase Date'),
+                //health_metrics
                 TextInput::make('health_metrics')->label('Health metrics'),
+                //firewall_settings
                 TextInput::make('firewall_settings')->label('Firewall Settings'),
+                //network_traffic_stats
                 TextInput::make('network_traffic_stats')->label('Network Traffic Stats'),
-               
-                TextInput::make('last_seen_at')->label('Last Seen At'),
-                TextInput::make('last_boot_at')->label('Last Boot At'),
-                TextInput::make('last_reboot_at')->label('Last Reboot At'),
-                TextInput::make('last_sync_at')->label('Last Sync At'),
-                TextInput::make('last_synced_at')->label('Last Synced At'),
+                //last_boot_at
+                DatePicker::make('last_boot_at') ->native(false)->label('Last Boot At'),
+                //last_seen_at
+                DatePicker::make('last_seen_at') ->native(false)->label('Last Seen At'),
+                //last_reboot_at
+                DatePicker::make('last_reboot_at') ->native(false)->label('Last Reboot At'),
+                //last_synced_at
+                DatePicker::make('last_synced_at') ->native(false)->label('Last Synced At'),
+                //created_by
                 Select::make(name: 'created_by')
 
                 
@@ -116,7 +132,18 @@ class DevicesResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')->label('Name')->searchable(),
+               TextColumn::make('username')->label('UserName')->searchable(),
+               TextColumn::make('assetType.type_name')->exists('assetType')->label('Device Type')->searchable(),
+
+
+               TextColumn::make('department.name')->exists('department')->label('Department')->searchable(),
+
+
+               TextColumn::make('connection_type')->label('Connection Type')->searchable(),
+               TextColumn::make('ip_address')->label('IP Address')->searchable(),
+               TextColumn::make('mac_address')->label('Mac Address')->searchable(),
+               TextColumn::make('location')->label('Location')->searchable(),
             ])
             ->filters([
                 //
@@ -141,9 +168,9 @@ class DevicesResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDevices::route('/'),
-            'create' => Pages\CreateDevices::route('/create'),
-            'edit' => Pages\EditDevices::route('/{record}/edit'),
+            'index' => Pages\ListAssets::route('/'),
+            'create' => Pages\CreateAssets::route('/create'),
+            'edit' => Pages\EditAssets::route('/{record}/edit'),
         ];
     }
 }

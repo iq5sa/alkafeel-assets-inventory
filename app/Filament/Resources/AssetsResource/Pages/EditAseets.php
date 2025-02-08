@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\DevicesResource\Pages;
 
-use App\Filament\Resources\DevicesResource;
+use App\Filament\Resources\AssetsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditDevices extends EditRecord
+class EditAssets extends EditRecord
 {
-    protected static string $resource = DevicesResource::class;
+    protected static string $resource = AssetsResource::class;
 
     protected function getHeaderActions(): array
     {
