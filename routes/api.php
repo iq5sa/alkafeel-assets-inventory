@@ -1,18 +1,12 @@
 <?php
 
-use App\Models\SystemInfo;
+use App\Models\RemoteAsset;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-use function Illuminate\Log\log;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
-
-Route::post('/set/osdata', function (Request $request) {
+Route::post('/remote/assets/set', function (Request $request) {
 
     $data = $request->all();
 
@@ -21,19 +15,21 @@ Route::post('/set/osdata', function (Request $request) {
         if (is_array($value)) {
             $data[$key] = json_encode($value);
         }elseif ($key == 'LastInventory') {
-            $data[$key] = \Carbon\Carbon::createFromFormat('m/d/Y H:i', $value)->format('Y-m-d H:i:s');
+            $data[$key] = Carbon::createFromFormat('m/d/Y H:i', $value)->format('Y-m-d H:i:s');
         }
     }
-    
-    $systemInfo = SystemInfo::create($data);
-   
+
+    RemoteAsset::create($data);
+
     return response(["message" => "OS data set!", "data"=>$data], 200);
 });
 
-Route::get('/set/osdata', function (Request $request) {
+
+
+Route::get('/remote/assets/set', function (Request $request) {
 
     $data = $request->all();
-    $systemInfo = SystemInfo::create($data);
-   
+    RemoteAsset::create($data);
+
     return response(["message" => "OS data set!", "data"=>$data], 200);
 });

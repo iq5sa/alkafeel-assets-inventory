@@ -11,17 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        Schema::create('asset_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
+        });
+
+
+        //assets table
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('device_type_id')->constrained('device_types');
+            $table->foreignId('asset_type_id')->constrained('asset_types');
             $table->string(column: 'mac_address');
             $table->ipAddress('ip_address');
             $table->string('subnet_mask')->nullable();
             $table->text('network_info')->nullable();
             $table->string('default_gateway')->nullable();
             $table->string('dns_servers')->nullable();
-            $table->enum('connection_type', ['Ethernet', 'Wi-Fi', 'Other'])->nullable();
+            $table->enum('connection_type', ['ethernet', 'wi-fi', 'other'])->nullable();
             $table->string('vlan_info')->nullable();
             $table->string('port_details')->nullable();
             $table->string('assigned_to')->nullable();
@@ -35,7 +44,6 @@ return new class extends Migration
             $table->date('purchase_date')->nullable();
             $table->string('maintenance_history_id')->nullable();
             $table->enum('operational_status', ['active', 'inactive', 'decommissioned'])->default('active');
-            $table->text('health_metrics')->nullable();
             $table->enum('antivirus_status',['enabled_up_to_date','enabled_outdated','disabled','not_installed','error'])->nullable();
             $table->text('firewall_settings')->nullable();
             $table->text('network_traffic_stats')->nullable();
@@ -51,9 +59,12 @@ return new class extends Migration
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->foreignId('deleted_by')->nullable()->constrained('users');
             $table->softDeletes();
-            
+
             $table->timestamps();
         });
+
+
+
     }
 
     /**
@@ -61,6 +72,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('devices');
+        Schema::dropIfExists('asset_types');
+        Schema::dropIfExists('assets');
+
     }
 };

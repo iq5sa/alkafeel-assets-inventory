@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('maintenance_histories', function (Blueprint $table) {
-            
+
             $table->id(); // Auto-incrementing primary key
-            $table->foreignId('device_id')->constrained('devices')->onDelete('cascade'); // Foreign key to devices table
+            $table->foreignId('asset_id')->constrained('assets')->onDelete('cascade'); // Foreign key to devices table
             $table->date('maintenance_date'); // Date of maintenance
             $table->string('performed_by'); // Person or team who performed the maintenance
             $table->text('description'); // Detailed description of the maintenance performed

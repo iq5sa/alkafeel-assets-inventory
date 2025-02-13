@@ -2,27 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DevicesResource\Pages;
-use App\Filament\Resources\DevicesResource\RelationManagers;
+use App\Filament\Resources\AssetsResource\Pages;
 use App\Models\Asset;
+use App\Models\AssetType;
 use App\Models\Department;
-use App\Models\Device;
-use App\Models\DeviceTypes;
-use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Select;
-use App\Models\User;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Support\Facades\Date;
+use Filament\Tables\Table;
 
 class AssetsResource extends Resource
 {
@@ -34,7 +25,7 @@ class AssetsResource extends Resource
     {
         return $form
             ->schema([
-                
+
                 //name
                 TextInput::make('name')->label('Name')->required(),
                 //username
@@ -45,7 +36,7 @@ class AssetsResource extends Resource
                 //Device Type
                 Select::make(name: 'device_type_id')
                 ->label('Device Type')
-                ->options(DeviceTypes::all()->pluck('type_name', 'id'))
+                ->options(AssetType::all()->pluck('type_name', 'id'))
                 ->searchable()->required(),
 
                 //assigned user department
@@ -73,7 +64,7 @@ class AssetsResource extends Resource
 
 
 
-                //mac address    
+                //mac address
                 TextInput::make('mac_address')->label('Mac address')->required(),
                 //ip address
                 TextInput::make('ip_address')->label('IP Address')->required(),
@@ -89,7 +80,7 @@ class AssetsResource extends Resource
                 TextInput::make('vlan_info')->label('VLAN Info'),
                 //port details
                 TextInput::make('port_details')->label('Port Details'),
-               
+
                 //model
                 TextInput::make('model')->label('Model'),
                 //serial number
@@ -122,10 +113,10 @@ class AssetsResource extends Resource
                 //created_by
                 Select::make(name: 'created_by')
 
-                
+
             ]);
 
-    
+
     }
 
     public static function table(Table $table): Table
