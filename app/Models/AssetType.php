@@ -13,9 +13,5 @@ class AssetType extends Model
 
 
 
-//      public function devices()
-//      {
-//            return $this->hasMany('App\Models\Devices');
-//      }
 
 }

@@ -12,12 +12,18 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Spatie\Permission\Models\Role;
 
-class UsersResource extends Resource
+
+class UsersResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+
+
 
     public static function form(Form $form): Form
     {
@@ -25,10 +31,19 @@ class UsersResource extends Resource
             ->schema([
                 TextInput::make('name')->label('Name')->required(),
                 TextInput::make('email')->label('Email')->required(),
+
+
                 TextInput::make('password')->label('Password')->required()->type('password'),
-                Select::make('department_id') ->options(Department::all()->pluck('name', 'id'))->label('Group')->required(),
+                Select::make('department_id')
+                    ->options(Department::all()->pluck('name', 'id'))->label('Department'),
 
 
+                Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->label('Assign Roles'),
             ]);
     }
 
@@ -38,7 +53,9 @@ class UsersResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email'),
-                TextColumn::make('department.name')->exists('department')->label('Group'),
+                TextColumn::make('department.name')->exists('department')->label('Department'),
+
+                TextColumn::make('roles.name')->label("Role")
             ])
             ->filters([
                 //
@@ -66,6 +83,19 @@ class UsersResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUsers::route('/create'),
             'edit' => Pages\EditUsers::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+            'delete_any',
+            'publish'
         ];
     }
 }

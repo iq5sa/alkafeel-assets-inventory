@@ -14,8 +14,10 @@ use Filament\Tables\Table;
 class RemoteAssetsResource extends Resource
 {
     protected static ?string $model = RemoteAsset::class;
+    protected static ?string $label = "Scanned assets";
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-magnifying-glass-circle';
+
 
     public static function canCreate(): bool
     {

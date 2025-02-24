@@ -12,7 +12,7 @@ class Asset extends Model
         'name',
         'username',
         'domain',
-        'device_type_id',
+        'asset_type_id',
         'department_id',
         'connection_type',
         'ip_address',

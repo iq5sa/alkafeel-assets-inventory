@@ -19,31 +19,26 @@ class AssetsResource extends Resource
 {
     protected static ?string $model = Asset::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
 
-                //name
-                TextInput::make('name')->label('Name')->required(),
-                //username
-                TextInput::make('username')->label('UserName')->required(),
+                TextInput::make('name')->label('Name')
+                    ->placeholder("Asset name")->required(),
 
-                //Domain
-                TextInput::make('domain')->label('Domain'),
-                //Device Type
-                Select::make(name: 'device_type_id')
-                ->label('Device Type')
-                ->options(AssetType::all()->pluck('type_name', 'id'))
-                ->searchable()->required(),
+                //Asset Type
+                Select::make(name: 'asset_type_id')
+                    ->label('Asset Type')
+                    ->options(AssetType::all()->pluck('name', 'id'))
+                    ->searchable()->required(),
 
-                //assigned user department
                 Select::make(name: 'department_id')
-                ->label('Departments')
-                ->options(Department::all()->pluck('name', 'id'))
-                ->searchable()->required(),
+                    ->label('Departments')
+                    ->options(Department::all()->pluck('name', 'id'))
+                    ->searchable()->required(),
 
                 //connection type
                 Select::make(name: 'connection_type')
@@ -53,15 +48,27 @@ class AssetsResource extends Resource
                         'Other' => 'Other',
                     ])->label('Connection Type'),
 
-                    //antivirus status
-                    Select::make(name: 'antivirus_status')->options([
-                        'enabled_up_to_date' => 'Enabled Up to Date',
-                        'enabled_outdated' => 'Enabled Outdated',
-                        'disabled' => 'Disabled',
-                        'not_installed' => 'Not Installed',
-                        'error' => 'Error',
-                    ])->label('Antivirus Status'),
+                //antivirus status
+                Select::make(name: 'antivirus_status')->options([
+                    'enabled_up_to_date' => 'Enabled Up to Date',
+                    'enabled_outdated' => 'Enabled Outdated',
+                    'disabled' => 'Disabled',
+                    'not_installed' => 'Not Installed',
+                    'error' => 'Error',
+                ])->label('Antivirus Status'),
 
+
+
+                //name
+                //username
+                TextInput::make('username')->label('UserName')->required(),
+
+                //Domain
+                TextInput::make('domain')->label('Domain'),
+
+
+
+                //assigned user department
 
 
                 //mac address
@@ -96,22 +103,7 @@ class AssetsResource extends Resource
 
                 //purchase date
                 DatePicker::make('purchase_date') ->native(false)->label('Purchase Date'),
-                //health_metrics
-                TextInput::make('health_metrics')->label('Health metrics'),
-                //firewall_settings
-                TextInput::make('firewall_settings')->label('Firewall Settings'),
-                //network_traffic_stats
-                TextInput::make('network_traffic_stats')->label('Network Traffic Stats'),
-                //last_boot_at
-                DatePicker::make('last_boot_at') ->native(false)->label('Last Boot At'),
-                //last_seen_at
-                DatePicker::make('last_seen_at') ->native(false)->label('Last Seen At'),
-                //last_reboot_at
-                DatePicker::make('last_reboot_at') ->native(false)->label('Last Reboot At'),
-                //last_synced_at
-                DatePicker::make('last_synced_at') ->native(false)->label('Last Synced At'),
-                //created_by
-                Select::make(name: 'created_by')
+
 
 
             ]);
@@ -125,7 +117,7 @@ class AssetsResource extends Resource
             ->columns([
                 TextColumn::make('name')->label('Name')->searchable(),
                TextColumn::make('username')->label('UserName')->searchable(),
-               TextColumn::make('assetType.type_name')->exists('assetType')->label('Device Type')->searchable(),
+               TextColumn::make('assetType.name')->exists('assetType')->label('Asset Type')->searchable(),
 
 
                TextColumn::make('department.name')->exists('department')->label('Department')->searchable(),
