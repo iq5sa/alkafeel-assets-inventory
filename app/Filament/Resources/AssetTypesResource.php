@@ -14,8 +14,8 @@ use Filament\Tables\Table;
 class AssetTypesResource extends Resource
 {
     protected static ?string $model = AssetType::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static ?string $navigationGroup = "Inventory Management";
 
 
     public static function form(Form $form): Form
@@ -23,7 +23,7 @@ class AssetTypesResource extends Resource
         return $form
             ->schema(
                 [
-                Forms\Components\TextInput::make('type_name'),
+                Forms\Components\TextInput::make('name')->label("Device name"),
             ]);
     }
 
@@ -32,10 +32,10 @@ class AssetTypesResource extends Resource
         return $table
             ->columns([
 
-                TextColumn::make('type_name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->label('Device Type'),
+                    ->label('Device name'),
 
                     TextColumn::make('created_at')
                     ->searchable()
@@ -70,5 +70,10 @@ class AssetTypesResource extends Resource
             'create' => Pages\CreateAssetTypes::route('/create'),
             'edit' => Pages\EditAssetTypes::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

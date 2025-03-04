@@ -14,8 +14,9 @@ use Filament\Tables\Table;
 class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
+    protected static ?string $navigationGroup = "Inventory Management";
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-folder-open';
 
     public static function form(Form $form): Form
     {
@@ -62,5 +63,10 @@ class DepartmentResource extends Resource
             'create' => Pages\CreateDepartment::route('/create'),
             'edit' => Pages\EditDepartment::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }
