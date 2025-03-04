@@ -32,11 +32,24 @@ class AssetsResource extends Resource
         return $form
             ->schema([
 
+<<<<<<< HEAD
                 TextInput::make('name')->label('Name')->placeholder("Asset name")->required(),
+=======
+                TextInput::make('name')->label('Name')
+                    ->placeholder("Asset name")->required(),
+
+                //Asset Type
+                Select::make(name: 'asset_type_id')
+                    ->label('Asset Type')
+                    ->options(AssetType::all()->pluck('name', 'id'))
+                    ->searchable()->required(),
+
+>>>>>>> f116ae9aa2355c584d705e65956f80c1e10e8c84
                 Select::make(name: 'department_id')
                     ->label('Departments')
                     ->options(Department::all()->pluck('name', 'id'))
                     ->searchable()->required(),
+<<<<<<< HEAD
 
 
 
@@ -44,6 +57,8 @@ class AssetsResource extends Resource
                     ->label('Asset Type')
                     ->options(AssetType::all()->pluck('name', 'id'))
                     ->searchable()->required(),
+=======
+>>>>>>> f116ae9aa2355c584d705e65956f80c1e10e8c84
 
                 //connection type
                 Select::make(name: 'connection_type')
@@ -61,10 +76,28 @@ class AssetsResource extends Resource
                     'not_installed' => 'Not Installed',
                     'error' => 'Error',
                 ])->label('Antivirus Status'),
+<<<<<<< HEAD
                 //username
                 TextInput::make('username')->label('User Name')->required(),
                 //Domain
                 TextInput::make('domain')->label('Domain'),
+=======
+
+
+
+                //name
+                //username
+                TextInput::make('username')->label('UserName')->required(),
+
+                //Domain
+                TextInput::make('domain')->label('Domain'),
+
+
+
+                //assigned user department
+
+
+>>>>>>> f116ae9aa2355c584d705e65956f80c1e10e8c84
                 //mac address
                 TextInput::make('mac_address')->label('Mac address')->required(),
                 //ip address
@@ -96,6 +129,10 @@ class AssetsResource extends Resource
 
                 //purchase date
                 DatePicker::make('purchase_date') ->native(false)->label('Purchase Date'),
+<<<<<<< HEAD
+=======
+
+>>>>>>> f116ae9aa2355c584d705e65956f80c1e10e8c84
 
                 // OS & User Info Table Columns
                 TextInput::make('connectedUser')->label("Connected User"),
@@ -126,7 +163,11 @@ class AssetsResource extends Resource
             ->columns([
                 TextColumn::make('name')->label('Name')->searchable(),
                TextColumn::make('username')->label('UserName')->searchable(),
+<<<<<<< HEAD
                TextColumn::make('type.name')->label('Asset Type')->searchable(),
+=======
+               TextColumn::make('assetType.name')->exists('assetType')->label('Asset Type')->searchable(),
+>>>>>>> f116ae9aa2355c584d705e65956f80c1e10e8c84
 
 
                TextColumn::make('department.name')->exists('department')->label('Department')->searchable(),
