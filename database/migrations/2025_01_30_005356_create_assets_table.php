@@ -64,22 +64,22 @@ return new class extends Migration
             $table->string('domain');
 
             // Additional Fields from the Second Table
-            $table->string('connectedUser');
-            $table->string('oSName');
-            $table->string('oSVersion');
-            $table->string('architecture');
-            $table->string('windowsLicense');
-            $table->string('windowsKey');
-            $table->text('networkData');
-            $table->string('swap');
-            $table->string('memory');
-            $table->uuid('uuid');
-            $table->string('userAgent');
-            $table->timestamp('lastInventory');
-            $table->text('cPUData');
-            $table->text('diskData');
-            $table->string('bIOSVersion');
-            $table->string('bIOSManufacturer');
+            $table->string('connectedUser')->nullable();
+            $table->string('oSName')->nullable();
+            $table->string('oSVersion')->nullable();
+            $table->string('architecture')->nullable();
+            $table->string('windowsLicense')->nullable();
+            $table->string('windowsKey')->nullable();
+            $table->text('networkData')->nullable();
+            $table->string('swap')->nullable();
+            $table->string('memory')->nullable();
+            $table->uuid('uuid')->nullable();
+            $table->string('userAgent')->nullable();
+            $table->timestamp('lastInventory')->nullable();
+            $table->text('cPUData')->nullable();
+            $table->text('diskData')->nullable();
+            $table->string('bIOSVersion')->nullable();
+            $table->string('bIOSManufacturer')->nullable();
 
             // Indexes & Foreign Keys
             $table->foreign('asset_type_id')->references('id')->on('asset_types')->onDelete('cascade');
