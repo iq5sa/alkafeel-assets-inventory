@@ -10,6 +10,10 @@ use App\Models\Department;
 use App\Models\Software;
 use Filament\Actions\ImportAction;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -17,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Log;
 
 class AssetsResource extends Resource
 {
@@ -31,93 +36,72 @@ class AssetsResource extends Resource
     {
         return $form
             ->schema([
+                Section::make('Device Information')
+                    ->schema([
 
-                TextInput::make('name')->label('Name')->placeholder("Asset name")->required(),
-                Select::make(name: 'department_id')
-                    ->label('Departments')
-                    ->options(Department::all()->pluck('name', 'id'))
-                    ->searchable()->required(),
+                        Grid::make(3)->schema([
+                            TextInput::make('name')->label('Device Name')->disabled(),
+                            TextInput::make('model')->label('Model')->disabled(),
+                            TextInput::make('serial_number')->label('Serial Number')->disabled(),
+                            TextInput::make('firmware_version')->label('Firmware Version')->disabled(),
+                            TextInput::make('software_version')->label('Software Version')->disabled(),
+                            TextInput::make('hardware_version')->label('Hardware Version')->disabled(),
+                        ])
+
+
+                    ]),
+
+                Section::make('Network Details')
+                    ->schema([
+                        Grid::make(3) // Set the grid to have 2 columns
+                            ->schema(components: [
+                                TextInput::make('ip_address')->label('IP Address')->disabled(),
+                                TextInput::make('public_ip')->label('Public IP')->disabled(),
+                                TextInput::make('mac_address')->label('MAC Addresses')->disabled(),
+                                TextInput::make('domain')->label('Domain')->disabled(),
+                                TextInput::make('username')->label('Username')->disabled(),
+                                // TextInput::make('logged_in_users')->label('LoggedIn users')->disabled(),
+                            ]),
+                    ]),
+
+                Section::make('System Information')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('os_name')->label('OS Name')->disabled(),
+                            TextInput::make('os_version')->label('OS Version')->disabled(),
+                            TextInput::make('architecture')->label('Architecture')->disabled(),
+                            TextInput::make('cpu_data')->label('CPU Details')->disabled(),
+                            TextInput::make('memory')->label('Total RAM')->disabled(),
+                            TextInput::make('swap')->label('Swap Memory')->disabled(),
+                            TextInput::make('bios_version')->label('BIOS Version')->disabled(),
+                            TextInput::make('bios_manufacturer')->label('BIOS Manufacturer')->disabled(),
+                        ])
+                    ]),
+
+                Section::make('Performance Metrics')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextInput::make('cpu_load')->label('CPU Load (%)')->disabled(),
+                            TextInput::make('ram_usage')->label('RAM Usage')->disabled(),
+                            TextInput::make('disk_read_speed')->label('Disk Read Speed (Bytes)')->disabled(),
+                            TextInput::make('uptime')->label('Uptime (seconds)')->disabled(),
+                            TextInput::make('battery_health')->label('Battery Health (%)')->disabled(),
+                        ])
+                    ]),
+
+                Section::make('Installed Apps')
+                    ->schema([
+
+                      Repeater::make("installed_apps")->label("All installed applications")->simple(
+                        TextInput::make('name')->label('Name')->disabled(),
+                      ),
+
+                    ]),
 
 
 
-                Select::make(name: 'type.name')
-                    ->label('Asset Type')
-                    ->options(AssetType::all()->pluck('name', 'id'))
-                    ->searchable()->required(),
-
-                //connection type
-                Select::make(name: 'connection_type')
-                    ->options([
-                        'Ethernet' => 'Ethernet',
-                        'Wi-Fi' => 'Wi-Fi',
-                        'Other' => 'Other',
-                    ])->label('Connection Type'),
-
-                //antivirus status
-                Select::make(name: 'antivirus_status')->options([
-                    'enabled_up_to_date' => 'Enabled Up to Date',
-                    'enabled_outdated' => 'Enabled Outdated',
-                    'disabled' => 'Disabled',
-                    'not_installed' => 'Not Installed',
-                    'error' => 'Error',
-                ])->label('Antivirus Status'),
-                //username
-                TextInput::make('username')->label('User Name')->required(),
-                //Domain
-                TextInput::make('domain')->label('Domain'),
-                //mac address
-                TextInput::make('mac_address')->label('Mac address')->required(),
-                //ip address
-                TextInput::make('ip_address')->label('IP Address')->required(),
-                //subnet mask
-                TextInput::make('subnet_mask')->label('Subnet mask'),
-                //network info
-                TextInput::make('network_info')->label('Network Info'),
-                //default gateway
-                TextInput::make('default_gateway')->label('Default Gateway'),
-                //dns servers
-                TextInput::make('dns_servers')->label('DNS Servers'),
-                //vlan info
-                TextInput::make('vlan_info')->label('VLAN Info'),
-                //port details
-                TextInput::make('port_details')->label('Port Details'),
-                //model
-                TextInput::make('model')->label('Model'),
-                //serial number
-                TextInput::make('serial_number')->label('Serial Number'),
-                //location
-                TextInput::make('location')->label('Location'),
-                //firmware version
-                TextInput::make('firmware_version')->label('Firmware Version'),
-                //software version
-                TextInput::make('software_version')->label('Software Version'),
-                //hardware version
-                TextInput::make('hardware_version')->label('Hardware Version'),
-
-                //purchase date
-                DatePicker::make('purchase_date') ->native(false)->label('Purchase Date'),
-
-                // OS & User Info Table Columns
-                TextInput::make('connectedUser')->label("Connected User"),
-                TextInput::make('oSName')->label("OS Name"),
-                TextInput::make('oSVersion')->label("OS Version"),
-                TextInput::make('architecture')->label("Architecture"),
-                TextInput::make('windowsLicense')->label("Windows License"),
-                TextInput::make('windowsKey')->label("Windows Key"),
-                TextInput::make('networkData')->label("Network Data"),
-                TextInput::make('swap')->label("Swap"),
-                TextInput::make('memory')->label("Memory"),
-                TextInput::make('uuid')->label("UUID"),
-                TextInput::make('userAgent')->label("User Agent"),
-                DatePicker::make('lastInventory')->native(false)->label('Last Inventory'),
-                TextInput::make('cPUData')->label("CPU Data"),
-                TextInput::make('diskData')->label("Disk Data"),
-                TextInput::make('bIOSVersion')->label("BIOS Version"),
-                TextInput::make('bIOSManufacturer')->label("BIOS Manufacturer"),
 
             ]);
-
-
     }
 
     public static function table(Table $table): Table
@@ -125,24 +109,22 @@ class AssetsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->label('Name')->searchable(),
-               TextColumn::make('username')->label('UserName')->searchable(),
-               TextColumn::make('type.name')->label('Asset Type')->searchable(),
+                TextColumn::make('connection_type')->label('Connection Type')->searchable(),
+                TextColumn::make('mac_address')
+                    ->label('MAC Addresses'),
 
+                TextColumn::make('ip_address')->label('IP Address')->searchable(),
 
-               TextColumn::make('department.name')->exists('department')->label('Department')->searchable(),
+                TextColumn::make('public_ip')->label('Public IP')->searchable(),
 
-
-               TextColumn::make('connection_type')->label('Connection Type')->searchable(),
-               TextColumn::make('ip_address')->label('IP Address')->searchable(),
-               TextColumn::make('mac_address')->label('Mac Address')->searchable(),
-               TextColumn::make('location')->label('Location')->searchable(),
             ])
             ->filters([
-                //
-
-                Tables\Filters\Filter::make("type"),
-                Tables\Filters\Filter::make("department"),
-            ])
+                Tables\Filters\SelectFilter::make('connection_type')
+                    ->options([
+                        'wi-fi' => 'Wi-Fi',
+                        'ethernet' => 'Ethernet',
+                    ])
+            ])->searchable()->defaultSort('name', 'asc')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
