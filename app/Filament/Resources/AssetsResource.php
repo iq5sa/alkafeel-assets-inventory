@@ -32,6 +32,9 @@ class AssetsResource extends Resource
 
 
 
+
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -57,7 +60,7 @@ class AssetsResource extends Resource
                             ->schema(components: [
                                 TextInput::make('ip_address')->label('IP Address')->disabled(),
                                 TextInput::make('public_ip')->label('Public IP')->disabled(),
-                                TextInput::make('mac_address')->label('MAC Addresses')->disabled(),
+                                TextInput::make('mac_address')->label('Mac address')->disabled(),
                                 TextInput::make('domain')->label('Domain')->disabled(),
                                 TextInput::make('username')->label('Username')->disabled(),
                                 // TextInput::make('logged_in_users')->label('LoggedIn users')->disabled(),
@@ -109,9 +112,9 @@ class AssetsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->label('Name')->searchable(),
-                TextColumn::make('connection_type')->label('Connection Type')->searchable(),
+                TextColumn::make('connection_type')->label('Interface')->searchable(),
                 TextColumn::make('mac_address')
-                    ->label('MAC Addresses'),
+                    ->label('Mac Address'),
 
                 TextColumn::make('ip_address')->label('IP Address')->searchable(),
 
@@ -127,6 +130,7 @@ class AssetsResource extends Resource
             ])->searchable()->defaultSort('name', 'asc')
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make('View')->icon('heroicon-o-eye'),
             ])
             ->headerActions([
                 Tables\Actions\ImportAction::make("Import action")->importer(AssetImporter::class),
@@ -151,6 +155,8 @@ class AssetsResource extends Resource
             'index' => Pages\ListAssets::route('/'),
             'create' => Pages\CreateAssets::route('/create'),
             'edit' => Pages\EditAssets::route('/{record}/edit'),
+            'view' => Pages\ViewAsset::route('/{record}/view'),
+
         ];
     }
 
@@ -158,4 +164,8 @@ class AssetsResource extends Resource
     {
         return static::getModel()::count();
     }
+
+
+
+
 }
