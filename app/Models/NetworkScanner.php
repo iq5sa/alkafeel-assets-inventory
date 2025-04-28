@@ -8,5 +8,5 @@ class NetworkScanner extends Model
 {
     //
 
-    protected $fillable = ['ip_address', 'status', 'result'];
+    protected $fillable = ['ip_address', 'status', 'result', "scan_type"];
 }

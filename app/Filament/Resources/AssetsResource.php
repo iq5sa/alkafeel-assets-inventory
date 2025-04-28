@@ -32,6 +32,9 @@ class AssetsResource extends Resource
 
 
 
+
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -40,12 +43,15 @@ class AssetsResource extends Resource
                     ->schema([
 
                         Grid::make(3)->schema([
-                            TextInput::make('name')->label('Device Name')->disabled(),
-                            TextInput::make('model')->label('Model')->disabled(),
-                            TextInput::make('serial_number')->label('Serial Number')->disabled(),
-                            TextInput::make('firmware_version')->label('Firmware Version')->disabled(),
-                            TextInput::make('software_version')->label('Software Version')->disabled(),
-                            TextInput::make('hardware_version')->label('Hardware Version')->disabled(),
+                            TextInput::make('name')->label('Device Name'),
+                            TextInput::make('model')->label('Model'),
+                            TextInput::make('serial_number')->label('Serial Number'),
+                            TextInput::make('firmware_version')->label('Firmware Version'),
+                            TextInput::make('software_version')->label('Software Version'),
+                            TextInput::make('hardware_version')->label('Hardware Version'),
+                            TextInput::make('device_owner')->label('Device Owner'),
+                            TextInput::make('sensitivity')->label('Sensitivity'),
+                            TextInput::make('sensitivity')->label('Importance'),
                         ])
 
 
@@ -55,37 +61,37 @@ class AssetsResource extends Resource
                     ->schema([
                         Grid::make(3) // Set the grid to have 2 columns
                             ->schema(components: [
-                                TextInput::make('ip_address')->label('IP Address')->disabled(),
-                                TextInput::make('public_ip')->label('Public IP')->disabled(),
-                                TextInput::make('mac_address')->label('MAC Addresses')->disabled(),
-                                TextInput::make('domain')->label('Domain')->disabled(),
-                                TextInput::make('username')->label('Username')->disabled(),
-                                // TextInput::make('logged_in_users')->label('LoggedIn users')->disabled(),
+                                TextInput::make('ip_address')->label('IP Address'),
+                                TextInput::make('public_ip')->label('Public IP'),
+                                TextInput::make('mac_address')->label('Mac address'),
+                                TextInput::make('domain')->label('Domain'),
+                                TextInput::make('username')->label('Username'),
+                                // TextInput::make('logged_in_users')->label('LoggedIn users'),
                             ]),
                     ]),
 
                 Section::make('System Information')
                     ->schema([
                         Grid::make(2)->schema([
-                            TextInput::make('os_name')->label('OS Name')->disabled(),
-                            TextInput::make('os_version')->label('OS Version')->disabled(),
-                            TextInput::make('architecture')->label('Architecture')->disabled(),
-                            TextInput::make('cpu_data')->label('CPU Details')->disabled(),
-                            TextInput::make('memory')->label('Total RAM')->disabled(),
-                            TextInput::make('swap')->label('Swap Memory')->disabled(),
-                            TextInput::make('bios_version')->label('BIOS Version')->disabled(),
-                            TextInput::make('bios_manufacturer')->label('BIOS Manufacturer')->disabled(),
+                            TextInput::make('os_name')->label('OS Name'),
+                            TextInput::make('os_version')->label('OS Version'),
+                            TextInput::make('architecture')->label('Architecture'),
+                            TextInput::make('cpu_data')->label('CPU Details'),
+                            TextInput::make('memory')->label('Total RAM'),
+                            TextInput::make('swap')->label('Swap Memory'),
+                            TextInput::make('bios_version')->label('BIOS Version'),
+                            TextInput::make('bios_manufacturer')->label('BIOS Manufacturer'),
                         ])
                     ]),
 
                 Section::make('Performance Metrics')
                     ->schema([
                         Grid::make(2)->schema([
-                            TextInput::make('cpu_load')->label('CPU Load (%)')->disabled(),
-                            TextInput::make('ram_usage')->label('RAM Usage')->disabled(),
-                            TextInput::make('disk_read_speed')->label('Disk Read Speed (Bytes)')->disabled(),
-                            TextInput::make('uptime')->label('Uptime (seconds)')->disabled(),
-                            TextInput::make('battery_health')->label('Battery Health (%)')->disabled(),
+                            TextInput::make('cpu_load')->label('CPU Load (%)'),
+                            TextInput::make('ram_usage')->label('RAM Usage'),
+                            TextInput::make('disk_read_speed')->label('Disk Read Speed (Bytes)'),
+                            TextInput::make('uptime')->label('Uptime (seconds)'),
+                            TextInput::make('battery_health')->label('Battery Health (%)'),
                         ])
                     ]),
 
@@ -93,7 +99,7 @@ class AssetsResource extends Resource
                     ->schema([
 
                       Repeater::make("installed_apps")->label("All installed applications")->simple(
-                        TextInput::make('name')->label('Name')->disabled(),
+                        TextInput::make('name')->label('Name'),
                       ),
 
                     ]),
@@ -109,9 +115,9 @@ class AssetsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->label('Name')->searchable(),
-                TextColumn::make('connection_type')->label('Connection Type')->searchable(),
+                TextColumn::make('connection_type')->label('Interface')->searchable(),
                 TextColumn::make('mac_address')
-                    ->label('MAC Addresses'),
+                    ->label('Mac Address'),
 
                 TextColumn::make('ip_address')->label('IP Address')->searchable(),
 
@@ -127,6 +133,7 @@ class AssetsResource extends Resource
             ])->searchable()->defaultSort('name', 'asc')
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make('View')->icon('heroicon-o-eye'),
             ])
             ->headerActions([
                 Tables\Actions\ImportAction::make("Import action")->importer(AssetImporter::class),
@@ -151,6 +158,8 @@ class AssetsResource extends Resource
             'index' => Pages\ListAssets::route('/'),
             'create' => Pages\CreateAssets::route('/create'),
             'edit' => Pages\EditAssets::route('/{record}/edit'),
+            'view' => Pages\ViewAsset::route('/{record}/view'),
+
         ];
     }
 
@@ -158,4 +167,8 @@ class AssetsResource extends Resource
     {
         return static::getModel()::count();
     }
+
+
+
+
 }

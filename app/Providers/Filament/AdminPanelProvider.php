@@ -25,6 +25,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\Facades\FilamentEditProfile;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Mvenghaus\FilamentScheduleMonitor\FilamentPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -66,18 +67,15 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            
-           
-         
+
             ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
-                \Mvenghaus\FilamentScheduleMonitor\FilamentPlugin::make(),
+                FilamentShieldPlugin::make(),
+                FilamentPlugin::make(),
                 FilamentEditProfilePlugin::make()
-                ->setNavigationGroup('Settings')
-                ->setIcon('heroicon-o-user')
+                    ->setNavigationGroup('Settings')
+                    ->setIcon('heroicon-o-user')
+                    ->shouldShowAvatarForm()
 
-
-           
             ]);
     }
 

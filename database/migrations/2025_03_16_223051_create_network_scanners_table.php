@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('ip_address');
             $table->string('status')->default('pending'); // pending, scanning, completed, failed
             $table->text('result')->nullable();
+            $table->enum("scan_type",["quick","full","os","ports"])->nullable();
             $table->timestamps();
         });
     }

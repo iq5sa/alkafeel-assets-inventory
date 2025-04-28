@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -24,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'department_id',
+        'avatar_url'
     ];
 
     /**
@@ -53,4 +55,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class);
     }
+
+
 }

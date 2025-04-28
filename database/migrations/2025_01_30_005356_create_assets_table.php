@@ -33,7 +33,10 @@ return new class extends Migration
             $table->enum('connection_type', ['ethernet', 'wi-fi', 'other'])->nullable();
             $table->string('vlan_info')->nullable();
             $table->string('port_details')->nullable();
-            $table->string('assigned_to')->nullable();
+            $table->string('device_manager')->nullable();
+            $table->string('device_owner')->nullable();
+            $table->string('sensitivity')->nullable();
+            $table->string('importance')->nullable();
             $table->string('model')->nullable();
             $table->string('serial_number')->nullable();
             $table->string('location')->nullable();
